@@ -20,12 +20,22 @@ from rag_chain import RAGChain
 # ─── Initialize App ──────────────────────────────────────────────────────────
 app = FastAPI(title="3GPP Standards Intelligence", version="1.0.0")
 
-# ─── Load RAG Chain on startup ────────────────────────────────────────────────
-rag_chain = RAGChain()
+# ─── Lazy-load RAG Chain (saves memory on startup) ────────────────────────────
+rag_chain = None
 
-@app.on_event("startup")
-async def startup():
-    rag_chain.load()
+def get_rag_chain():
+    global rag_chain
+    if rag_chain is None:
+        # Auto-run ingestion if vector store doesn't exist
+        index_path = VECTORSTORE_DIR / "index.faiss"
+        if not index_path.exists():
+            import subprocess
+            print("⚡ Vector store not found. Running ingestion...")
+            subprocess.run([sys.executable, "download_specs.py"], check=True)
+            subprocess.run([sys.executable, "ingest.py", "--force"], check=True)
+        rag_chain = RAGChain()
+        rag_chain.load()
+    return rag_chain
 
 # ─── Request/Response Models ──────────────────────────────────────────────────
 class QueryRequest(BaseModel):
@@ -50,7 +60,8 @@ async def query(req: QueryRequest):
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
     
-    result = rag_chain.query(req.question)
+    chain = get_rag_chain()
+    result = chain.query(req.question)
     
     # Get the response text (backend uses different keys)
     response_text = result.get("response", result.get("final_response", ""))
