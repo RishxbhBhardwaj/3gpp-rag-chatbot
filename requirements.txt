@@ -1,0 +1,29 @@
+# 3GPP RAG Chatbot - Dependencies
+# All free/open-source tools
+
+# UI / Server
+fastapi
+uvicorn[standard]
+
+# LLM Framework
+langchain
+langchain-community
+langchain-core
+
+# Vector Store
+faiss-cpu>=1.7.0
+
+# Embeddings (runs locally, no API needed)
+sentence-transformers
+
+# PDF Parsing (pure Python, works on all Python versions)
+pypdf
+
+# LLM API (Groq - free tier)
+groq
+
+# Utilities
+python-dotenv
+numpy
+tqdm
+requests

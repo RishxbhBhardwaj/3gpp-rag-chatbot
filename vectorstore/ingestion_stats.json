@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-08-14 00:54:22",
+  "total_pdfs": 7,
+  "total_pages": 3004,
+  "total_chunks": 3004,
+  "embedding_model": "all-MiniLM-L6-v2",
+  "embedding_dimension": 384,
+  "chunk_size": 1000,
+  "chunk_overlap": 200,
+  "stats": {
+    "total_chunks": 3004,
+    "avg_chunk_size": 3195,
+    "min_chunk_size": 35,
+    "max_chunk_size": 7565,
+    "specs_covered": [
+      "TS 38.300",
+      "TS 29.500",
+      "TS 33.501",
+      "TS 23.501",
+      "TS 24.501",
+      "TS 23.503",
+      "TS 23.502"
+    ],
+    "chunks_with_sections": 471
+  }
+}
