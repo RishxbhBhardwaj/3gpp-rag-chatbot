@@ -37,6 +37,19 @@ def get_rag_chain():
         rag_chain.load()
     return rag_chain
 
+@app.on_event("startup")
+async def startup():
+    """Pre-load RAG chain on startup."""
+    try:
+        get_rag_chain()
+    except Exception as e:
+        print(f"Warning: Failed to pre-load RAG chain: {e}")
+
+@app.get("/health")
+async def health():
+    """Health check endpoint."""
+    return {"status": "ok"}
+
 # ─── Request/Response Models ──────────────────────────────────────────────────
 class QueryRequest(BaseModel):
     question: str
